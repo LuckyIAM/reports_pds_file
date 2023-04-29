@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import qs from "qs"
 
 const data = {
     grant_type:'password',
@@ -11,14 +12,15 @@ const data = {
     refresh_token: ''
 }
 
-export default () => {
-    axios.post(`http://opac.liart.local/api/v1/oauth2/token`, {
-        headers: {
-            'Content-Type': 'application/www-form-urlencoded'
-        },
-        data
-    })
-    .then(respons => {console.log(respons)})
+export default async() => {
+    const options = {
+        method: 'POST',
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        data: qs.stringify(data),
+        url:`http://opac.liart.local/api/v1/oauth2/token`,
+      }
+    await axios(options)
+    .then(respons => {localStorage.setItem('token', respons.data.access_token)})
     .catch(err => {console.error(err)})
 }
 
